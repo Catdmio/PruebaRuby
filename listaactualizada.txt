@@ -1,3 +1,4 @@
 Gonzalo con promedio 5
 Mai con promedio 9
 JP con promedio 10
+Cata con promedio 4
