@@ -18,8 +18,6 @@ def inasistencias_totales
 end
 
 
-lista_nomnot.find_index(dataalum) != 0
-
 
 #Método promedio aprobados
 def prom_aprobados
@@ -27,7 +25,8 @@ def prom_aprobados
   unatend.each do |lista_nomnot|
     nombre = lista_nomnot[0]
     total_inasist = lista_nomnot.map { |n| n > 0 }
-    if true puts 'Aprobado'
+    if true
+      puts 'Aprobado'
     else puts 'cuek, vas a tener que hacer el ramo de nuevo'
     end
   end
@@ -35,20 +34,32 @@ end
 
 #Método de hacer promedios
 def promedios
+  listapromedios = {}
   lista_nomnot = lista_notas
   lista_nomnot.each do |elem|
     nombre = elem[0]
     notas = elem.select { |numero| elem.find_index(numero) != 0 &&  numero != 'A' }
+    notas = notas.map(&:to_i)
     promedio = notas.sum/notas.count
+    listapromedios[nombre] = promedio
+  end
+  escribir_archivo(listapromedios)
+end
+
+def escribir_archivo(listapromedios)
+  File.open( 'listaactualizada.txt','w') do |file|
+    listapromedios.each do |nombre, promedio|
+      file.puts "#{nombre} con promedio #{promedio}"
+    end
   end
 end
 
 #Método de verificación de aprobación
 def verificar_aprobado(promedio, nombre)
   if promedio > 5
-    puts '¡Felicidades! #{nombre} estás pasando el ramo'
+    puts "¡Felicidades! #{nombre} estás pasando el ramo"
   else
-    puts '#{nombre} deberás esforzarte un poco más para no repetir ;)!'
+    puts "#{nombre} deberás esforzarte un poco más para no repetir ;)!"
   end
 end
 
@@ -60,17 +71,16 @@ puts '¡Bienvenido a la API de Gestión de Alumnos! Selecciona la función que d
 options = 0
 while options != 5
   puts 'Escoje una opción ingresando el número correspondiente'
-  '1. Revisar alumnos'
-  '2. Agregar alumno y sus notas, si no estuvo en prueba poner -A-'
-  '3. Revisar inasistencias totales'
-  '4. Alumnos que actualmente están aprobando el ramo'
-  '5. Salir'
+  puts '1. Alumnos y promedios'
+  puts '2. Inasistencias por alumno'
+  puts '3. Alumnos aprobados'
+  puts '4. Salir'
 
   option = gets.chomp.to_i
 
   case option
   when 1
-    lista_notas
+    promedios
   when 2
     inasistencias_totales
   when 3
